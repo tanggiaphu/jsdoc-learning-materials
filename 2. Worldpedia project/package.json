@@ -1,0 +1,14 @@
+{
+  "name": "worldpedia-materials",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "jsdoc": "jsdoc -c ./documentation/conf.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jsdoc": "^3.6.7"
+  }
+}

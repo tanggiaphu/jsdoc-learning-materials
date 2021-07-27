@@ -1,0 +1,10 @@
+{
+  "source": {
+    "include": "./src/js",
+    "includePattern": ".+\\.js(doc|x)?$",
+    "excludePattern": "(^|\\/|\\\\)_"
+  },
+  "opts": {
+    "destination": "./documentation/doc-source"
+  }
+}

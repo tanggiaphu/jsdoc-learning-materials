@@ -1,0 +1,14 @@
+{
+  "name": "materials-p2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "gen-doc": "jsdoc -c ./documentation/conf.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "jsdoc": "^3.6.7"
+  }
+}
