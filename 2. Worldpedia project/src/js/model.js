@@ -1,7 +1,9 @@
 export const state = {
     currentCountry: {},
-    results: [],
-    currentBorderCode: ""
+    search: {
+        query: "",
+        results: []
+    }
 }
 
 export const shortenCountryData = function (longCountryData) {
@@ -31,12 +33,12 @@ export const shortenCountryData = function (longCountryData) {
 
 export async function getCountryData(inputData, getBorderData = false) {
     try {
-        const url = getBorderData ? `https://restcountries.eu/rest/v2/alpha?codes=${inputData}` : `https://restcountries.eu/rest/v2/name/${inputData}`
+        const url = getBorderData ? `https://restcountries.eu/rest/v2/alpha?codes=${inputData}`
+            : `https://restcountries.eu/rest/v2/name/${inputData}`
         const response = await fetch(url)
         if (!response.ok) throw new Error(`Could not find any country matching '${inputData}' query!`)
         const data = await response.json()
         const compactCountriesData = shortenCountryData(data)
-        state.results = compactCountriesData
         console.log(compactCountriesData)
         return compactCountriesData
     } catch (err) {

@@ -5,9 +5,25 @@ import searchView from "./view/searchView.js"
 import resultView from './view/resultView.js'
 
 const applicationInitiation = function () {
-    searchView.addSearchEventHandler(controlSearch)
-    countryView.addBorderEventHandler(renderBorders)
-    resultView.addResultClickEventHandler(renderResults)
+    document.querySelector('.search-container').addEventListener('submit', async function (e) {
+        e.preventDefault()
+        await controlSearch()
+        showResults(Model.state.search.query)
+    })
+
+    document.querySelector('.country').addEventListener('click', function (e) {
+        if (!e.target.classList.contains('country-border')) return;
+        const borderCode = e.target.innerText
+        renderBorders(borderCode)
+    })
+
+    document.querySelector('.results-container').addEventListener('click', (e) => {
+        const targetEl = e.target.closest('.result')
+        if (!targetEl) return;
+        const targetName = targetEl.querySelector('.result-name').innerHTML
+        renderResults(targetName)
+        renderCountry()
+    })
 }
 
 const controlSearch = async function () {
@@ -17,8 +33,8 @@ const controlSearch = async function () {
         countryView.showLoadSpinner()
         const countryData = await Model.getCountryData(query)
         searchView.clearInput()
-        console.log(Model.state.results)
-        showResults(query)
+        Model.state.search.query = query
+        Model.state.search.results = countryData
     } catch (err) {
         errorView.showErrorModal(err.message)
         searchView.clearInput()
@@ -27,24 +43,22 @@ const controlSearch = async function () {
 }
 
 const renderCountry = function () {
-    countryView.renderCountryData(Model.state.currentCountry)
+    countryView.renderCountryData(Model.state.currentCountry, countryView.createCountryMarkup)
 }
 
 const renderBorders = async function (borderCode) {
-    Model.state.currentBorderCode = borderCode
     countryView.showLoadSpinner()
-    const data = await Model.getCountryData(Model.state.currentBorderCode, true)
-    countryView.renderCountryData(data[0])
+    const data = await Model.getCountryData(borderCode, true)
+    countryView.renderCountryData(data[0], countryView.createCountryMarkup)
 }
 
 const showResults = function (query) {
-    resultView.renderResults(Model.state.results, query)
+    resultView.renderResults(Model.state.search.results, query)
 }
 
 const renderResults = function (clickedResultName) {
-    const clickedResult = Model.state.results.find(country => country.name === clickedResultName)
+    const clickedResult = Model.state.search.results.find(country => country.name === clickedResultName)
     Model.state.currentCountry = clickedResult
-    renderCountry()
     resultView.closeModal()
 }
 

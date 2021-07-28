@@ -2,9 +2,9 @@ class countryView {
     countryContainer = document.querySelector('.country')
     loadSpinner = document.querySelector('.spinner')
 
-    renderCountryData(countryData) {
+    renderCountryData(countryData, markupGenerator) {
         this.clearCountryContainer()
-        this.countryContainer.insertAdjacentHTML('afterbegin', this.createCountryMarkup(countryData))
+        this.countryContainer.insertAdjacentHTML('afterbegin', markupGenerator.call(this, countryData))
         this.hideLoadSpinner()
     }
 
@@ -24,7 +24,7 @@ class countryView {
             <div class="information-container row">
                 <div class="information-col col-6">
                     <h3 class="small-information">Latitude/Longitude: ${countryData.latlng.length == 0 ? "19.28/166.63" : countryData.latlng[0].toFixed(2) + "/" + countryData.latlng[1].toFixed(2)}</h3>
-                    <h3 class="small-information">Timezone: ${countryData.timezones.length === 1 ? countryData.timezones[0] : `<div href="#" class="timezone-link">${countryData.timezones.length} timezones</div>`}</h3>
+                    <h3 class="small-information">Timezone${countryData.timezones.length === 1 ? "" : "s"}: ${countryData.timezones.length} timezone${countryData.timezones.length === 1 ? "" : "s"}</h3>
                     <h3 class="small-information">Capital: ${countryData.capital}</h3>
                     <h3 class="small-information">Area: ${this.formatLargeNumber(countryData.area, 1)} km²</h3>
                     <h3 class="small-information">Currenc${countryData.currencyCode.length > 1 ? 'ies' : 'y'} Code${countryData.currencyCode.length > 1 ? 's' : ''}: ${countryData.currencyCode.join(', ')}</h3>
@@ -37,9 +37,9 @@ class countryView {
                     <h3 class="small-information" id="country-borders"> Borders: ${countryData.borders.length === 0 ? `${countryData.name} don't have any border country` : countryData.borders.map(border => `<a class="country-border">${border}</a>`).join(', ')}</h3>
                 </div>
                 <a href="https://en.wikipedia.org/wiki/${countryData.name}" target="_blank" class="btn show-all-btn">More informations...</a>
-            </div>
-        </div>
-        `
+            </div >
+        </div >
+    `
     }
 
     clearCountryContainer() {
@@ -69,15 +69,6 @@ class countryView {
 
     removeWelcomeMessage() {
         document.querySelector('.welcome').classList.add('hidden')
-    }
-
-    addBorderEventHandler(handler) {
-        this.countryContainer.addEventListener('click', function (e) {
-            if (!e.target.classList.contains('country-border')) return;
-            const borderCode = e.target.innerText
-            console.log(borderCode)
-            handler(borderCode)
-        })
     }
 }
 
